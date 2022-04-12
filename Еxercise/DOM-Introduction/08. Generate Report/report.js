@@ -1,11 +1,33 @@
 function generateReport() {
-    let headersTr = document.querySelector('table>thead>tr:nth-child(1)');
-    let headersInputs = Array.from(headersTr.querySelectorAll('input'));
-    let dataTr = document.querySelectorAll('tbody tr');
+    let trHeadersElements = document.querySelector('table>thead>tr:nth-child(1)');
+    let headersInputElements = Array.from(trHeadersElements.querySelectorAll('input'));
+    let trDataElements = document.querySelectorAll('tbody tr');
+    let outputElement = document.getElementById('output');
 
-    let checkedFilterElem = headersInputs.filter(e => e.checked);
-    let checked = checkedFilterElem.map(e => e.name);
-    let firstRow = dataTr[0]
-    console.log(headersTr, checkedFilterElem);
-    console.log(firstRow);
+    if (trHeadersElements == null || headersInputElements == null || trDataElements == null || outputElement == null) {
+        throw new Error('Missing DOM Element!');
+    }
+
+    let keys = headersInputElements.map(e => e.name);
+    let indexOfCheckedEl = headersInputElements.reduce((a, b, i) => {
+        if (b.checked) {
+            a.push(i);
+        }
+
+        return a;
+    }, []);
+
+    let output = Array.from(trDataElements).reduce((a, b) => {
+        let currObj = Array.from(b.children).reduce((agg, el, i) => {
+            if (indexOfCheckedEl.includes(i)) {
+                agg[keys[i]] = el.textContent;
+            }
+            return agg;
+        }, {});
+
+        a.push(currObj);
+        return a;
+    }, []);
+
+    outputElement.innerText = JSON.stringify(output);
 }
