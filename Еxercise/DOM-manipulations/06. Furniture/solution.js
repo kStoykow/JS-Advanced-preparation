@@ -12,69 +12,77 @@ function solve() {
   function outputParse(arr, price, avg) {
     return `Bought furniture: ${arr.join(', ')}\nTotal price: ${price.toFixed(2)}\nAverage decoration factor: ${avg / arr.length}`;
   }
+  function createAndAppend(parent, child, content) {
+    const tagMap = {
+      'img': (parentElem, childElem, content) => {
+        childElem.src = content;
+        parentElem.appendChild(childElem);
+        return parentElem;
+      },
+      'input': (parentElem, childElem, content) => {
+        childElem.type = content;
+        parentElem.appendChild(childElem);
+        return parentElem;
+      }
+    }
 
+    let parentElem = document.createElement(parent);
+    let childElem = document.createElement(child);
+
+    if (typeof tagMap[child] == 'function') {
+      tagMap[child](parentElem, childElem, content);
+      return parentElem;
+    }
+
+    childElem.textContent = content;
+    parentElem.appendChild(childElem);
+    return parentElem;
+  }
   function buyClickHandler() {
     let checkboxes = document.querySelectorAll('input[type="checkbox"]');
 
     if (checkboxes == null) {
       throw new Error('Missing checkboxes!');
     }
+
     let purchases = [];
     let price = 0;
     let avgDecFactor = 0;
 
-    console.log(
-      Array.from(checkboxes).filter(e => e.checked).map(e => {
-        let [_, nameElem, priceElem, decFactorElem] = e.parentElement.children;
-        purchases.push(nameElem.textContent);
-        price += Number(priceElem.textContent);
-        avgDecFactor += Number(decFactorElem.textContent);
-      })
-    )
-    resultElem.textContent = outputParse(purchases, price, avgDecFactor);
+    Array.from(checkboxes).filter(e => e.checked).forEach(e => {
+      let nameElem = e.parentElement.parentElement.children[1];
+      let priceElem = e.parentElement.parentElement.children[2];
+      let decFactorElem = e.parentElement.parentElement.children[3];
+
+      purchases.push(nameElem.textContent);
+      price += Number(priceElem.textContent);
+      avgDecFactor += Number(decFactorElem.textContent);
+    });
+
+    resultElem.value = outputParse(purchases, price, avgDecFactor);
   }
 
   function generateClickHandler() {
-    function createContent(arr) {
-      let img;
-      let name;
-      let price;
-      let decor;
-      let checkbox = document.createElement('input');
-      checkbox.setAttribute('type', 'checkbox');
-
-      for (const [tag, content] of arr) {
-        if (tag == 'img') {
-          img = document.createElement('img');
-          img.src = content;
-          img.alt = 'img';
-        } else if (tag == 'name') {
-          name = document.createElement('p');
-          name.textContent = content;
-        } else if (tag == 'price') {
-          price = document.createElement('p');
-          price.textContent = content;
-        } else if (tag == 'decFactor') {
-          decor = document.createElement('p');
-          decor.textContent = content;
-        }
-      }
-      return [img, name, price, decor, checkbox];
-    }
-
-    let data = JSON.parse(inputElem.value).map(x => {
+    JSON.parse(inputElem.value).forEach(x => {
       let tr = document.createElement('tr');
 
-      createContent(Object.entries(x)).forEach(e => {
-        let td = document.createElement('td');
-        td.appendChild(e);
-        tr.appendChild(td);
-      });
+      let img = createAndAppend('td', 'img', x.img)
+      tr.appendChild(img);
 
-      return tr;
+      let name = createAndAppend('td', 'p', x.name);
+      tr.appendChild(name);
+
+      let price = createAndAppend('td', 'p', x.price);
+      tr.appendChild(price);
+
+      let decor = createAndAppend('td', 'p', x.decFactor);
+      tr.appendChild(decor);
+
+      let checkbox = createAndAppend('td', 'input', 'checkbox');
+      tr.appendChild(checkbox);
+
+      tbodyElem.appendChild(tr);
     });
-
-    data.forEach(x => tbodyElem.appendChild(x));
   }
 
   generateBtn.addEventListener('click', generateClickHandler);
