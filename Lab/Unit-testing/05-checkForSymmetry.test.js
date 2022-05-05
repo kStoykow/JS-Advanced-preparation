@@ -1,5 +1,4 @@
 const expect = require('chai').expect;
-const { json } = require('mocha/lib/reporters');
 const isSymmetric = require('./05-checkForSymmetry');
 
 describe('Check result if array is not passed as argument', () => {
