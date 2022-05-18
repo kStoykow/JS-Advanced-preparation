@@ -17,7 +17,7 @@ const myObj = extensibleObject();
 
 const template = {
     extensionMethod: function () { },
-    extensionProperty: 'someString'
+    extensionProperty: 'someString',
 }
 
 myObj.extend(template);
