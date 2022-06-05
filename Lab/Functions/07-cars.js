@@ -1,5 +1,5 @@
 function solve(input) {
-    let data = {};
+    const data = {};
 
     const commandsMap = {
         create: (name, inherits, parentName) => {
@@ -7,7 +7,7 @@ function solve(input) {
         },
         set: (name, k, v) => data[name][k] = v,
         print: name => {
-            let entries = [];
+            const entries = [];
             for (const key in data[name]) {
                 entries.push(`${key}:${data[name][key]}`);
             }
@@ -16,9 +16,9 @@ function solve(input) {
     }
 
     input.forEach(x => {
-        let [command, name, k, v] = x.split(" ");
+        const [command, name, k, v] = x.split(" ");
         commandsMap[command](name, k, v);
-    })
+    });
 }
 console.log(solve(['create a',
     'create b inherit a',
