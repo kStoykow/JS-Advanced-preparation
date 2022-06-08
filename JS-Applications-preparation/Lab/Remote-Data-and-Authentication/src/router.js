@@ -3,6 +3,7 @@ import { renderCreate } from "./pages/create.js";
 import { renderLogout } from "./pages/logout.js";
 import { renderLogin } from "./pages/login.js";
 import { renderRegister } from "./pages/register.js";
+import { renderError } from "./pages/404.js";
 
 const pages = {
     '/': renderHome,
@@ -11,14 +12,16 @@ const pages = {
     '/login': renderLogin,
     '/register': renderRegister,
 }
-const errorPage = document.querySelector('.error');
-function renderError() {
-    errorPage.style.display = 'block';
-}
 
+const rootElem = document.querySelector('.root');
+function hideContent() {
+    [...rootElem.querySelectorAll('article')].forEach(e => e.style.display = 'none');
+
+}
 export function router(rout) {
-    if (pages[rout] == undefined) {
-        renderError()
-    }
-    pages[rout]();
+    hideContent();
+
+    const renderer = pages[rout] || renderError;
+    // updateAuth();
+    renderer();
 }

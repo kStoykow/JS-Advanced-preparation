@@ -1,6 +1,12 @@
-const baseElem = document.querySelector('.root');
-const homeElem = baseElem.querySelector('.home');
+import { updateAuth } from "../auth.js";
+import { loadRecipes, createInitRecipeCards, createRecipeCard } from '../utilities.js';
+
+const rootElem = document.querySelector('.root');
+const homeElem = rootElem.querySelector('.home');
 
 export function renderHome() {
-    homeElem.style.display = 'block';
+        updateAuth();
+        homeElem.style.display = 'block';
+        loadRecipes()
+                .then(createInitRecipeCards);
 }
