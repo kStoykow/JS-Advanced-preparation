@@ -69,7 +69,7 @@ export function createInitRecipeCards(recipe) {
 
 export function createRecipeCard(recipe) {
     const ulElem = create.ul('');
-
+    console.log(recipe);
     recipe.ingredients.map(e => ulElem.appendChild(create.li(e)));
 
     const ingredientsElem = create.div([

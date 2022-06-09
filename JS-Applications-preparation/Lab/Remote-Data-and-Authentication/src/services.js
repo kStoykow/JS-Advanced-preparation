@@ -1,4 +1,5 @@
 import { getToken } from "./auth.js";
+import { renderError } from "./pages/404.js";
 
 export function req(method, url, data) {
     let options = {
@@ -24,7 +25,7 @@ export function req(method, url, data) {
     }
 
     return fetch(url, options)
-        .then(res => res.json())
+        .then(res => res.json());
 }
 
 export const get = req.bind(null, 'GET');

@@ -8,7 +8,7 @@ const recipesUrl = `${baseUrl}/data/recipes`;
 const guestRecipes = `${baseUrl}/jsonstore/cookbook/recipes`;
 const loginUrl = `${baseUrl}/users/login`;
 
-export function loadRecipes() {
+export const loadRecipes = () => {
     let token = getToken();
     if (!token) {
         return req.get(guestRecipes)
@@ -20,8 +20,9 @@ export function loadRecipes() {
         .catch(e => console.log(e));
 }
 
-export function getRecipeById(id) {
+export const getRecipeById = (id) => {
     return fetch(`${recipesUrl}/${id}`)
+        // .then(res => console.log(res))
         .catch(err => console.log(err));
 }
 
@@ -34,9 +35,10 @@ export const login = (email, password) => {
                 updateAuth();
                 renderHome();
             } else {
-                renderError('Wrong Email or Password. Please try again.');
+                throw new Error('Wrong Email or Password. Please try again.');
             }
-        });
+        })
+        .catch(e => renderError(e.message));
 };
 
 export const createNewRecipe = (data) => req.post(recipesUrl, data).then(renderHome());
