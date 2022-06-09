@@ -5,8 +5,6 @@ import { clearOldRecipes, createInitRecipeCards, changeActiveBtnStyle } from '..
 const rootElem = document.querySelector('.root');
 const mainNav = document.querySelector('nav');
 
-const baseUrl = 'http://localhost:3030';
-const recipeUrl = `${baseUrl}/data/recipes`;
 
 export function renderHome() {
         hideContent();

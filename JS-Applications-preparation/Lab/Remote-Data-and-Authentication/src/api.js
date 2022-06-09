@@ -1,13 +1,20 @@
 import * as req from "./services.js"
 import { renderError } from "./pages/404.js";
 import { renderHome } from "./pages/home.js";
-import { updateAuth } from "./auth.js";
+import { updateAuth, getToken } from "./auth.js";
 
 const baseUrl = 'http://localhost:3030';
 const recipesUrl = `${baseUrl}/data/recipes`;
+const guestRecipes = `${baseUrl}/jsonstore/cookbook/recipes`;
 const loginUrl = `${baseUrl}/users/login`;
 
 export function loadRecipes() {
+    let token = getToken();
+    if (!token) {
+        return req.get(guestRecipes)
+            .then(data => Object.values(data))
+            .catch(e => console.log(e));
+    }
     return req.get(recipesUrl)
         .then(data => Object.values(data))
         .catch(e => console.log(e));
@@ -32,8 +39,4 @@ export const login = (email, password) => {
         });
 };
 
-export const createNewRecipe = (data) => {
-    req.post(recipesUrl, data)
-    //.then(res => console.log(res))
-}
-
+export const createNewRecipe = (data) => req.post(recipesUrl, data).then(renderHome());

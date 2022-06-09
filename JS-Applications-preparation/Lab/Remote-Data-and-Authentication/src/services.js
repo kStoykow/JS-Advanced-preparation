@@ -1,22 +1,24 @@
 import { getToken } from "./auth.js";
 
-function req(method, url, data) {
+export function req(method, url, data) {
     let options = {
+        method: 'GET',
         headers: {
             'content-type': 'application/json',
         },
     };
 
-
-    if (method != 'GET' && method != 'DELETE') {
+    if (method != 'GET') {
         options = {
             method: method,
+            headers: {
+                'content-type': 'application/json',
+            },
             body: JSON.stringify(data)
         }
     }
 
     let token = getToken();
-    console.log(token);
     if (token) {
         options.headers['X-Authorization'] = token;
     }
