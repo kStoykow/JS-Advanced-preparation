@@ -1,12 +1,16 @@
-import { updateAuth } from "../auth.js";
-import { loadRecipes, createInitRecipeCards, createRecipeCard } from '../utilities.js';
+import { hideContent } from "../router.js";
+import { loadRecipes } from '../api.js';
+import { clearOldRecipes, createInitRecipeCards, changeActiveBtnStyle } from '../utilities.js';
 
 const rootElem = document.querySelector('.root');
-const homeElem = rootElem.querySelector('.home');
+const mainNav = document.querySelector('nav');
+
+
 
 export function renderHome() {
-        updateAuth();
-        homeElem.style.display = 'block';
-        loadRecipes()
-                .then(createInitRecipeCards);
+        hideContent();
+        changeActiveBtnStyle(mainNav, document.querySelector('nav a[href="/"]'));
+
+        clearOldRecipes();
+        loadRecipes().then(data => data.forEach(e => rootElem.appendChild(createInitRecipeCards(e))));
 }

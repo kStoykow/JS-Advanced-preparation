@@ -28,18 +28,6 @@
 
     <main class="root">
 
-        <article class="home">
-            <div class="preview">
-                <div class="title">
-                    <h2>Title</h2>
-                </div>
-                <div class="small">
-                    <img src="assets/lasagna.jpg">
-                </div>
-            </div>
-        </article>
-
-
         <article class="error">
             <h3>Error</h3>
         </article>
@@ -48,7 +36,7 @@
             <form>
                 <label>E-mail: <input type="text" name="email"></label>
                 <label>Password: <input type="password" name="password"></label>
-                <input type="submit" value="Login">
+                <input id="login-btn" type="submit" value="Login">
             </form>
         </article>
 
@@ -58,7 +46,7 @@
                 <label>E-mail: <input type="text" name="email"></label>
                 <label>Password: <input type="password" name="password"></label>
                 <label>Repeat: <input type="password" name="rePass"></label>
-                <input type="submit" value="Register">
+                <input id="register-btn" type="submit" value="Register">
             </form>
         </article>
 
@@ -71,7 +59,7 @@
                         placeholder="Enter ingredients on separate lines"></textarea></label>
                 <label class="ml">Preparation: <textarea name="steps"
                         placeholder="Enter preparation steps on separate lines"></textarea></label>
-                <input type="submit" value="Create Recipe">
+                <input id="create-btn" type="submit" value="Create Recipe">
             </form>
         </article>
     </main>

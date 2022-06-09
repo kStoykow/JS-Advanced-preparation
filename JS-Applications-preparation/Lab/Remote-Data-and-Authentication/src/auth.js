@@ -1,10 +1,11 @@
 const userNav = document.getElementById('user');
 const guestNav = document.getElementById('guest');
 
-export function updateAuth() {
-    let user = localStorage.getItem('user'); // MAKE REAL
+export let currUser = undefined;
 
-    if (user) {
+export function updateAuth(token) {
+    if (token) {
+        currUser = JSON.parse(localStorage.getItem(token.username));
         userNav.style.display = 'inline';
         guestNav.style.display = 'none';
     } else {

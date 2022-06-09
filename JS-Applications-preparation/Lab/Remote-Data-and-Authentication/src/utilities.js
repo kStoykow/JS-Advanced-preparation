@@ -1,3 +1,6 @@
+import { loadRecipes, getRecipeById } from "./api.js";
+const pagesCount = 4;
+
 function DOMElementFactory(type, content, attribute) {
     const elem = document.createElement(type);
     if (typeof content == 'string') {
@@ -19,73 +22,49 @@ function DOMElementFactory(type, content, attribute) {
 
     return elem;
 }
-const article = DOMElementFactory.bind(null, 'article');
-const div = DOMElementFactory.bind(null, 'div');
-const img = DOMElementFactory.bind(null, 'img');
-const h2 = DOMElementFactory.bind(null, 'h2');
-const h3 = DOMElementFactory.bind(null, 'h3');
-const p = DOMElementFactory.bind(null, 'p');
-const ul = DOMElementFactory.bind(null, 'ul');
-const li = DOMElementFactory.bind(null, 'li');
-
 export const create = {
-    article, div, img, h2, h3, p, ul, li
-};
+    article: DOMElementFactory.bind(null, 'article'),
+    div: DOMElementFactory.bind(null, 'div'),
+    img: DOMElementFactory.bind(null, 'img'),
+    h2: DOMElementFactory.bind(null, 'h2'),
+    h3: DOMElementFactory.bind(null, 'h3'),
+    p: DOMElementFactory.bind(null, 'p'),
+    ul: DOMElementFactory.bind(null, 'ul'),
+    li: DOMElementFactory.bind(null, 'li'),
+}
 
 export function changeActiveBtnStyle(nav, elem) {
     nav.querySelector('.active').classList.remove('active');
     elem.classList.add('active');
 }
 
-//app funcs
-export function loadRecipes() {
-    return fetch('http://localhost:3030/data/recipes')
-        .then(response => response.json())
-        .then(data => Object.values(data))
-        .catch(e => console.log(e));
-}
-
-export function getRecipeById(id) {
-    return fetch(`http://localhost:3030/data/recipes/${id}`)
-        .then(e => e.json())
-        .catch(err => console.log(err));
-}
-
-const pagesCount = 3;
 export function shrinkCard(e) {
     let childIndex = Array.from(e.currentTarget.parentElement.children).indexOf(e.currentTarget);
     let currArticle = e.currentTarget.parentElement.children[childIndex];
-console.log(currArticle);
-console.log(childIndex);
-    loadRecipes()
-        // .then(el => {
-        //     for (const e of el) {
-        //         console.log(e);
-        //         if (e == el[childIndex - pagesCount]) {
-        //             currArticle.replaceWith(createInitRecipeCards(e));
-        //         }
-        //     }
-        // });
 
-        //TO FINISH SHRINK
+    loadRecipes()
+        .then(el => {
+            for (const e of el) {
+                if (e == el[childIndex - pagesCount]) {
+                    currArticle.replaceWith(createInitRecipeCards(e));
+                }
+            }
+        });
 }
 
-export function createInitRecipeCards(recipes) {
-    const root = document.querySelector('.root');
-
+export function createInitRecipeCards(recipe) {
     function toggleCard(recipe, parent) {
         getRecipeById(recipe._id).then(recipeDetails => parent.replaceWith(createRecipeCard(recipeDetails)));
     }
-    for (const recipe of recipes) {
-        const articleElem = create.article([
-            create.div(create.h2(recipe.name), [['className', 'title']]),
-            create.div(create.img(recipe.img), [['className', 'small']]),
-        ], [['className', 'preview']]);
 
-        articleElem.addEventListener('click', toggleCard.bind(null, recipe, articleElem));
+    const articleElem = create.article([
+        create.div(create.h2(recipe.name), [['className', 'title']]),
+        create.div(create.img(recipe.img), [['className', 'small']]),
+    ], [['className', 'preview']]);
 
-        root.appendChild(articleElem);
-    }
+    articleElem.addEventListener('click', toggleCard.bind(null, recipe, articleElem));
+
+    return articleElem;
 }
 
 export function createRecipeCard(recipe) {
@@ -111,4 +90,8 @@ export function createRecipeCard(recipe) {
     articleElem.addEventListener('click', shrinkCard);
 
     return articleElem;
+}
+
+export function clearOldRecipes() {
+    [...document.querySelectorAll('.preview')].forEach(e => e.remove());
 }
