@@ -1,27 +1,49 @@
-import { updateAuth } from "../auth.js";
-
-const rootElem = document.querySelector('.root');
-const createElem = rootElem.querySelector('.create-recipe-page');
+import *as req from "../services.js";
+import { createNewRecipe } from "../api.js"
+import { getToken, updateAuth } from "../auth.js";
+const createElem = document.querySelector('.create-recipe-page');
 const formElem = createElem.querySelector('form');
 
-formElem.addEventListener('submit', create);
+export function renderCreate() {
+    createElem.style.display = 'block';
+}
 
-function create(e) {
+formElem.addEventListener('submit', (e) => {
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget);
     const data = {
         name: formData.get('name'),
         img: formData.get('img'),
-        ingredients: formData.get('ingredients'),
-        steps: formData.get('steps')
+        ingredients: formData.get('ingredients').split('\n'),
+        steps: formData.get('steps').split('\n')
     }
+    updateAuth();
+    console.log(req.post);
+    createNewRecipe(data);
+});
 
-    let token = localStorage.getItem('token');
-    console.log(token);
+// function create(e) {
+//     e.preventDefault();
 
-}
+//     const formData = new FormData(e.currentTarget);
+//     const data = {
+//         name: formData.get('name'),
+//         img: formData.get('img'),
+//         ingredients: formData.get('ingredients').split('\n'),
+//         steps: formData.get('steps').split('\n')
+//     }
 
-export function renderCreate() {
-    createElem.style.display = 'block';
-}
+//     let token = getToken();
+//     req.post('/data/recipes', data)
+//         // fetch('http://localhost:3030/data/recipes', {
+//         //     method: 'POST',
+//         //     headers: {
+//         //         'content-type': 'application/json',
+//         //         'X-Authorization': token
+//         //     },
+//         //     body: JSON.stringify(data)
+//         // })
+//         //     .then(res => res.json())
+//         .then(res => console.log(res))
+// }

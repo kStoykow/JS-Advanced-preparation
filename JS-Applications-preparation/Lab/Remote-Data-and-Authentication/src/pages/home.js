@@ -5,12 +5,14 @@ import { clearOldRecipes, createInitRecipeCards, changeActiveBtnStyle } from '..
 const rootElem = document.querySelector('.root');
 const mainNav = document.querySelector('nav');
 
-
+const baseUrl = 'http://localhost:3030';
+const recipeUrl = `${baseUrl}/data/recipes`;
 
 export function renderHome() {
         hideContent();
         changeActiveBtnStyle(mainNav, document.querySelector('nav a[href="/"]'));
 
         clearOldRecipes();
-        loadRecipes().then(data => data.forEach(e => rootElem.appendChild(createInitRecipeCards(e))));
+        loadRecipes()
+                .then(data => data.forEach(e => rootElem.appendChild(createInitRecipeCards(e))));
 }
