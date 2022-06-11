@@ -3,7 +3,7 @@ import { updateAuth } from "../auth.js";
 
 const rootElem = document.querySelector('.root');
 const loginElem = rootElem.querySelector('.login-page');
-const formElem = loginElem.querySelector('.login-page form');
+const formElem = loginElem.querySelector('form');
 
 formElem.addEventListener('submit', (e) => {
     e.preventDefault();

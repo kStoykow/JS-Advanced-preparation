@@ -1,5 +1,4 @@
 import { getToken } from "./auth.js";
-import { renderError } from "./pages/404.js";
 
 export function req(method, url, data) {
     let options = {
@@ -30,4 +29,3 @@ export function req(method, url, data) {
 
 export const get = req.bind(null, 'GET');
 export const post = req.bind(null, 'POST');
-//NOT WORKING

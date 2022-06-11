@@ -3,6 +3,7 @@ const guestNav = document.getElementById('guest');
 
 export function updateAuth() {
     let serializedUser = localStorage.getItem('user');
+    
     if (serializedUser) {
         userNav.style.display = 'inline';
         guestNav.style.display = 'none';

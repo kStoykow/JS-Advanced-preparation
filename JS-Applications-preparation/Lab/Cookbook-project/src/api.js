@@ -7,6 +7,7 @@ const baseUrl = 'http://localhost:3030';
 const recipesUrl = `${baseUrl}/data/recipes`;
 const guestRecipes = `${baseUrl}/jsonstore/cookbook/recipes`;
 const loginUrl = `${baseUrl}/users/login`;
+const registerUrl = `${baseUrl}/users/register`;
 
 export const loadRecipes = () => {
     let token = getToken();
@@ -22,7 +23,6 @@ export const loadRecipes = () => {
 
 export const getRecipeById = (id) => {
     return fetch(`${recipesUrl}/${id}`)
-        // .then(res => console.log(res))
         .catch(err => console.log(err));
 }
 
@@ -38,7 +38,22 @@ export const login = (email, password) => {
                 throw new Error('Wrong Email or Password. Please try again.');
             }
         })
-        .catch(e => renderError(e.message));
+        .catch(e => renderError(e.message, 'login'));
 };
+
+export const register = (email, password, repeat) => {
+    return req.post(registerUrl, { email, password, repeat })
+        .then(res => {
+            console.log(res)
+            if (res.code == 409) {
+                throw new Error('Email already exists');
+            }
+            //      make      
+            //      password match
+            //      and throw
+            //      msg if not
+        })
+        .catch(e => renderError(e.message), 'register');
+}
 
 export const createNewRecipe = (data) => req.post(recipesUrl, data).then(renderHome());
