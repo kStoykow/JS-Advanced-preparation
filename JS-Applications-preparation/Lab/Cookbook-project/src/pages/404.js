@@ -19,7 +19,6 @@ export function renderError(msg, redirectPath) {
 
     if (msg) {
         errorPage.textContent = msg;
-        redirectTo[redirectPath]
         setTimeout(() => {
             errorPage.style.display = 'none';
             redirect(redirectPath);

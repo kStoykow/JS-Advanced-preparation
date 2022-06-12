@@ -1,5 +1,4 @@
 import { login } from "../api.js";
-import { updateAuth } from "../auth.js";
 
 const rootElem = document.querySelector('.root');
 const loginElem = rootElem.querySelector('.login-page');
@@ -16,7 +15,6 @@ formElem.addEventListener('submit', (e) => {
 
     login(loginData.email, loginData.password);
 });
-
 
 export function renderLogin() {
     loginElem.style.display = 'block';

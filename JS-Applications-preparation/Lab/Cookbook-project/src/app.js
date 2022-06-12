@@ -3,10 +3,7 @@ import { router } from './router.js';
 import { renderHome } from "./pages/home.js";
 import { updateAuth } from "./auth.js";
 
-const root = document.querySelector('.root');
 const mainNav = document.querySelector('nav');
-
-
 
 updateAuth();
 renderHome();

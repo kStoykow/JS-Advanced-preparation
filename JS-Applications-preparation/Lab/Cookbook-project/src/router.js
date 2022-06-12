@@ -1,6 +1,7 @@
+// import { logout } from "./api.js";
+import { renderLogout } from "./pages/logout.js";
 import { renderHome } from "./pages/home.js";
 import { renderCreate } from "./pages/create.js";
-import { logout } from "./pages/logout.js";
 import { renderLogin } from "./pages/login.js";
 import { renderRegister } from "./pages/register.js";
 import { renderError } from "./pages/404.js";
@@ -8,7 +9,7 @@ import { renderError } from "./pages/404.js";
 const pages = {
     '/': renderHome,
     '/create': renderCreate,
-    '/logout': logout,
+    '/logout': renderLogout,
     '/login': renderLogin,
     '/register': renderRegister,
 }

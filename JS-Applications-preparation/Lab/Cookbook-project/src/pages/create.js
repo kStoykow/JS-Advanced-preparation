@@ -1,6 +1,6 @@
-import *as req from "../services.js";
 import { createNewRecipe } from "../api.js"
-import { getToken, updateAuth } from "../auth.js";
+import { updateAuth } from "../auth.js";
+
 const createElem = document.querySelector('.create-recipe-page');
 const formElem = createElem.querySelector('form');
 

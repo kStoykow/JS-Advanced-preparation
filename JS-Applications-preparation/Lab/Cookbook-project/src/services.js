@@ -24,7 +24,12 @@ export function req(method, url, data) {
     }
 
     return fetch(url, options)
-        .then(res => res.json());
+        .then(res => {
+            if (res.status == 204) {
+                return res;
+            }
+            return res.json();
+        });
 }
 
 export const get = req.bind(null, 'GET');
