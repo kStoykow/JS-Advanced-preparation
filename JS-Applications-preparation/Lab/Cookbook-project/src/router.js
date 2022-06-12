@@ -4,7 +4,7 @@ import { renderHome } from "./pages/home.js";
 import { renderCreate } from "./pages/create.js";
 import { renderLogin } from "./pages/login.js";
 import { renderRegister } from "./pages/register.js";
-import { renderError } from "./pages/404.js";
+import { renderMessage } from "./pages/msgPage.js";
 
 const pages = {
     '/': renderHome,
@@ -22,6 +22,6 @@ export function hideContent() {
 export function router(rout) {
     hideContent();
 
-    const renderer = pages[rout] || renderError;
+    const renderer = pages[rout] || renderMessage;
     renderer();
 }

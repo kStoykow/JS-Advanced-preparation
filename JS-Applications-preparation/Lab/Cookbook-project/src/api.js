@@ -1,38 +1,45 @@
-import * as req from "./services.js"
-import { renderError } from "./pages/404.js";
+import * as req from "./services.js";
+import { renderMessage } from "./pages/msgPage.js";
 import { renderHome } from "./pages/home.js";
 import { updateAuth, getToken } from "./auth.js";
-import { createInitRecipeCards, changeActiveBtnStyle } from './utilities.js';
+import { changeActiveBtnStyle } from './utilities.js';
 
 const baseUrl = 'http://localhost:3030';
-const recipesUrl = `${baseUrl}/data/recipes`;
-const guestRecipes = `${baseUrl}/jsonstore/cookbook/recipes`;
 const loginUrl = `${baseUrl}/users/login`;
 const logoutUrl = `${baseUrl}/users/logout`;
+const recipesUrl = `${baseUrl}/data/recipes`;
 const registerUrl = `${baseUrl}/users/register`;
+const guestRecipesUrl = `${baseUrl}/jsonstore/cookbook/recipes`;
+const guestRecipeDetailsUrl = `${baseUrl}/jsonstore/cookbook/details`;
+
 const rootElem = document.querySelector('.root');
 const mainNav = document.querySelector('nav');
-const errorPage = rootElem.querySelector('.error');
+const msgPage = rootElem.querySelector('.msg');
 
 
 export const loadRecipes = () => {
     let token = getToken();
     if (!token) {
-        return req.get(guestRecipes)
+        return req.get(guestRecipesUrl)
             .then(data => Object.values(data))
-            .then(recipes => recipes.forEach(e => rootElem.appendChild(createInitRecipeCards(e))))
-            .catch(e => console.log(e));
+            .catch(err => console.log(err));
     }
     return req.get(recipesUrl)
         .then(data => Object.values(data))
-        .then(recipes => recipes.forEach(e => rootElem.appendChild(createInitRecipeCards(e))))
-        .catch(e => console.log(e));
+        .catch(err => console.log(err));
 }
 
-export const getRecipeById = (id) =>
-    fetch(`${recipesUrl}/${id}`)
-        .catch(err => console.log(err));
+export const getRecipeById = (id) => {
+    let token = getToken();
+    if (!token) {
+        return req.get(`${guestRecipeDetailsUrl}/${id}`)
+            .catch(err => console.log(err));
+    } else {
+        return req.get(`${recipesUrl}/${id}`)
+            .catch(err => console.log(err));
+    }
 
+}
 
 export const login = (email, password) =>
     req.post(loginUrl, { email, password })
@@ -48,26 +55,26 @@ export const login = (email, password) =>
                 throw new Error('Wrong Email or Password. Please try again.');
             }
         })
-        .catch(e => renderError(e.message, 'login'));
+        .catch(err => renderMessage(err.message, 'login'));
 
 
 export let logout = () =>
     req.get(logoutUrl)
         .then(res => {
             if (res.ok) {
-                errorPage.style.display = 'block';
-                errorPage.textContent = 'Successfully Logged out';
+                msgPage.style.display = 'block';
+                msgPage.textContent = 'Successfully Logged out';
 
                 localStorage.removeItem('user');
                 updateAuth();
+                changeActiveBtnStyle(mainNav, document.querySelector(`nav a[href="/"]`));
 
                 setTimeout(() => {
-                    errorPage.style.display = 'none';
+                    msgPage.style.display = 'none';
                     renderHome();
                 }, 1500);
             }
         });
-
 
 export const register = (email, password, repeat) => {
     return req.post(registerUrl, { email, password, repeat })
@@ -80,8 +87,9 @@ export const register = (email, password, repeat) => {
                 throw new Error('Passwords must match!');
             }
 
+            renderMessage('Successfully registration.', 'login');
         })
-        .catch(e => renderError(e.message, 'register'));
+        .catch(err => renderMessage(err.message, 'register'));
 }
 
 export const createNewRecipe = (data) => req.post(recipesUrl, data).then(renderHome());

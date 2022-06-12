@@ -69,10 +69,10 @@ a.active {
 .login-page,
 .register-page,
 .create-recipe-page,
-.error {
+.msg {
     display: none;
 }
 
-.error {
+.msg {
     text-align: center;
 }

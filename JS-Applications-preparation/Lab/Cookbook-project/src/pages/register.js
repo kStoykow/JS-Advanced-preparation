@@ -1,9 +1,8 @@
 import { register } from "../api.js";
-import { updateAuth } from "../auth.js";
+
 const rootElem = document.querySelector('.root');
 const registerElem = rootElem.querySelector('.register-page');
 const registerForm = registerElem.querySelector('form');
-
 
 registerForm.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -21,4 +20,3 @@ registerForm.addEventListener('submit', (e) => {
 export function renderRegister() {
     registerElem.style.display = 'block';
 }
-

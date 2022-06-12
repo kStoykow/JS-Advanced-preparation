@@ -38,30 +38,33 @@ export function changeActiveBtnStyle(nav, elem) {
     elem.classList.add('active');
 }
 
-export function shrinkCard(e) {
-    let childIndex = Array.from(e.currentTarget.parentElement.children).indexOf(e.currentTarget);
-    let currArticle = e.currentTarget.parentElement.children[childIndex];
+function cardShrinker(index, currArticle, cardsArray) {
+    for (const card of cardsArray) {
+        if (card == cardsArray[index - pagesCount]) {
+            currArticle.replaceWith(createInitRecipeCards(card));
+        }
+    }
+}
 
+export function shrinkCard(evt) {
+    let childIndex = Array.from(evt.currentTarget.parentElement.children).indexOf(evt.currentTarget);
+    let currArticle = evt.currentTarget.parentElement.children[childIndex];
+
+    const shrink = cardShrinker.bind(null, childIndex, currArticle);
     loadRecipes()
-        .then(el => {
-            for (const e of el) {
-                if (e == el[childIndex - pagesCount]) {
-                    currArticle.replaceWith(createInitRecipeCards(e));
-                }
-            }
-        });
+        .then(shrink);
 }
 
 export function createInitRecipeCards(recipe) {
     function toggleCard(recipe, parent) {
-        getRecipeById(recipe._id).then(recipeDetails => parent.replaceWith(createRecipeCard(recipeDetails)));
+        getRecipeById(recipe._id)
+            .then(recipeDetails => parent.replaceWith(createRecipeCard(recipeDetails)));
     }
 
     const articleElem = create.article([
         create.div(create.h2(recipe.name), [['className', 'title']]),
         create.div(create.img(recipe.img), [['className', 'small']]),
     ], [['className', 'preview']]);
-
     articleElem.addEventListener('click', toggleCard.bind(null, recipe, articleElem));
 
     return articleElem;
