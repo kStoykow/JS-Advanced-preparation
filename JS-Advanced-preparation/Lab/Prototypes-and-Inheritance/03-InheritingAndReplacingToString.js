@@ -27,7 +27,7 @@ function toStringExtension() {
     }
 
     Teacher.prototype = Object.create(Person.prototype);
-    Student.prototype = Object.create(Teacher.prototype);
+    Student.prototype = Object.create(Person.prototype);
     return {
         Person,
         Teacher,

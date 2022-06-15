@@ -2,10 +2,10 @@ function Person(firstName, lastName) {
     this.firstName = firstName;
     this.lastName = lastName;
     Object.defineProperty(this, 'fullName', {
-        get: function () {
+        get() {
             return this.firstName + ' ' + this.lastName;
         },
-        set: function (val) {
+        set(val) {
             let names = val.split(' ');
             if (names.length == 2) {
                 this.firstName = names[0];

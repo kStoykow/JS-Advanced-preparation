@@ -26,7 +26,7 @@ function Student(name, email, course) {
 }
 
 Teacher.prototype = Object.create(Person.prototype);
-Student.prototype = Object.create(Teacher.prototype);
+Student.prototype = Object.create(Person.prototype);
 
 
 function extendPrototype(myClass) {
