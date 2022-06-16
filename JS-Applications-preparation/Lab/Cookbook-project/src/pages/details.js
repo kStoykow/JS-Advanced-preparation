@@ -9,5 +9,6 @@ export function renderDetails(recipe) {
 
     getRecipeById(recipe._id)
         .then(createRecipeCard)
-        .then(article => root.appendChild(article));
+        .then(article => root.appendChild(article))
+        .catch(err => console.log(err));
 }
