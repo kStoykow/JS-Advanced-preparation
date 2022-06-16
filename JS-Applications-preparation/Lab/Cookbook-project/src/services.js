@@ -33,4 +33,6 @@ export function req(method, url, data) {
 }
 
 export const get = req.bind(null, 'GET');
+export const put = req.bind(null, 'PUT');
 export const post = req.bind(null, 'POST');
+export const del = req.bind(null, 'DELETE');

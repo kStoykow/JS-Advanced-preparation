@@ -3,19 +3,19 @@ import { renderHome } from "./pages/home.js";
 import { updateAuth, getToken } from "./auth.js";
 import { renderDetails } from "./pages/details.js";
 import { renderMessage } from "./pages/msgPage.js";
-import { changeActiveBtnStyle } from './utilities.js';
+import { changeActiveBtnStyle, renderDeletedRecipe } from './utilities.js';
 
 const baseUrl = 'http://localhost:3030';
 const ownerUrl = `${baseUrl}/users/me`;
 const loginUrl = `${baseUrl}/users/login`;
 const logoutUrl = `${baseUrl}/users/logout`;
 const recipesUrl = `${baseUrl}/data/recipes`;
-const guestRecipeUrl = `${baseUrl}/jsonstore/coockbook/recipes`;
 const registerUrl = `${baseUrl}/users/register`;
+const guestRecipeUrl = `${baseUrl}/jsonstore/coockbook/recipes`;
 
-const rootElem = document.querySelector('.root');
+const root = document.querySelector('.root');
 const mainNav = document.querySelector('nav');
-const msgPage = rootElem.querySelector('.msg');
+const msgPage = root.querySelector('.msg');
 
 export const articleHolders = {};
 
@@ -106,3 +106,12 @@ export const createNewRecipe = (data) =>
     req.post(recipesUrl, data)
         .then(renderDetails)
         .catch(e => console.log(e));
+
+export const updateRecipe = (data, id) => req.put(recipesUrl + `/${id}`, data)
+    .then(renderHome())
+    .catch(err => console.log(err))
+
+export const deleteRecipeById = (id) =>
+    req.del(recipesUrl + `/${id}`)
+        .then(renderDeletedRecipe)
+        .catch(err => console.log(err));

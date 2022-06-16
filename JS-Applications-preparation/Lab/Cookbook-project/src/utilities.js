@@ -1,8 +1,9 @@
 import { getOwner } from "./api.js";
-// import { renderEdit } from "./pages/update.js";
 import { getToken } from './auth.js';
-import { renderDetails } from "./pages/details.js";
+import { updateRecipe } from "./api.js";
 import { hideContent } from "./router.js";
+import { deleteRecipeById } from "./api.js";
+import { renderDetails } from "./pages/details.js";
 
 const root = document.querySelector('.root');
 
@@ -34,29 +35,42 @@ function DOMElementFactory(type, content, attribute) {
     return elem;
 }
 
-function editHandler(recipe, e) {
+function editRecipeHandler(recipe) {
     hideContent();
     const article = createUpdateForm(recipe);
     root.appendChild(article);
 }
-function deleteHandler(recipe, e) {
-   
-}
-function updateFormHandler(e) {
 
+function deleteRecipeHandler(recipe) {
+    const confirmed = confirm(`Are you sure you want to delete ${recipe.name}?`);
+    if (confirmed) {
+        deleteRecipeById(recipe._id);
+    }
 }
 
-function showMoreFactory(recipe) {
+function updateFormHandler(recipe, e) {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const data = {
+        name: formData.get('name'),
+        img: formData.get('img'),
+        ingredients: formData.get('ingredients').split('\n'),
+        steps: formData.get('steps').split('\n')
+    }
+    updateRecipe(data, recipe._id);
+}
+
+function recipeOwnerBtnsFactory(recipe) {
     const editBtn = create.button('\u270E Edit');
     const deleteBtn = create.button('\u2716 Delete');
 
-    editBtn.addEventListener('click', editHandler.bind(null, recipe));
-    deleteBtn.addEventListener('click', deleteHandler.bind(null, recipe));
+    editBtn.addEventListener('click', editRecipeHandler.bind(null, recipe));
+    deleteBtn.addEventListener('click', deleteRecipeHandler.bind(null, recipe));
 
     return create.div([editBtn, deleteBtn], [['className', 'controls']]);
 }
 
-export const create = {
+const create = {
     textarea: DOMElementFactory.bind(null, 'textarea'),
     article: DOMElementFactory.bind(null, 'article'),
     button: DOMElementFactory.bind(null, 'button'),
@@ -83,7 +97,6 @@ export function createInitRecipeCards(recipe) {
         create.div(create.img(recipe.img), [['className', 'small']]),
     ], [['className', 'preview']]);
     articleElem.addEventListener('click', renderDetails.bind(null, recipe));
-    // articleElem.addEventListener('click', renderEdit.bind(null, recipe));
 
     return articleElem;
 }
@@ -102,7 +115,7 @@ export function createRecipeCard(recipe) {
         create.div([create.h3('Preparation:'), container], [['className', 'description']])
     ]);
 
-    const showEdit = showMoreFactory(recipe);
+    const showEdit = recipeOwnerBtnsFactory(recipe);
     let token = getToken();
     if (token) {
         getOwner()
@@ -121,16 +134,22 @@ export function clearOldRecipes() {
 }
 
 export function createUpdateForm(recipe) {
-    const updateFormBtn = create.input('', [['id', 'edit-recipe-btn'], ['type', 'submit'], ['value', 'Update Recipe']]);
-    updateFormBtn.addEventListener('click', updateFormHandler);
+    const form = create.form([
+        create.label(['Name: ', create.input('', [['type', 'text'], ['name', 'name'], ['value', `${recipe.name}`]])]),
+        create.label(['Image: ', create.input('', [['type', 'text'], ['name', 'img'], ['value', `${recipe.img}`]])]),
+        create.label(['Ingredients: ', create.textarea('', [['name', 'ingredients'], ['value', `${recipe.ingredients.join('\n')}`]])], [['className', 'ml']]),
+        create.label(['Preparation: ', create.textarea('', [['name', 'steps'], ['value', `${recipe.steps.join('\n')}`]])], [['className', 'ml']]),
+        create.input('', [['id', 'edit-recipe-btn'], ['type', 'submit'], ['value', 'Update Recipe']])
+    ]);
+    form.addEventListener('submit', updateFormHandler.bind(null, recipe));
+
     return create.article([
         create.h2('Edit Recipe'),
-        create.form([
-            create.label(['Name: ', create.input('', [['type', 'text'], ['name', 'name'], ['value', `${recipe.name}`]])]),
-            create.label(['Image: ', create.input('', [['type', 'text'], ['name', 'img'], ['value', `${recipe.img}`]])]),
-            create.label(['Ingredients: ', create.textarea('', [['name', 'ingredients'], ['value', `${recipe.ingredients.join('\n')}`]])], [['className', 'ml']]),
-            create.label(['Preparation: ', create.textarea('', [['name', 'steps'], ['value', `${recipe.steps.join('\n')}`]])], [['className', 'ml']]),
-            updateFormBtn
-        ])
+        form
     ], [['className', 'update-recipe-page']]);
+}
+
+export function renderDeletedRecipe() {
+    hideContent();
+    root.appendChild(create.article([create.h2('Recipe deleted')]));
 }
