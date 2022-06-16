@@ -1,5 +1,6 @@
-import { loadRecipes, getRecipeById } from "./api.js";
-const pagesCount = 4;
+import { getOwner } from "./api.js";
+import { renderDetails } from "./pages/details.js";
+import { getToken } from './auth.js';
 
 function DOMElementFactory(type, content, attribute) {
     const elem = document.createElement(type);
@@ -22,8 +23,24 @@ function DOMElementFactory(type, content, attribute) {
 
     return elem;
 }
+
+function editHandler(e) {
+
+}
+function deleteHandler(e) {
+
+}
+
+function showMoreFactory() {
+    const editBtn = create.button('\u270E Edit');
+    const deleteBtn = create.button('\u2716 Delete');
+
+    return create.div([editBtn, deleteBtn], [['className', 'controls']]);
+}
+
 export const create = {
     article: DOMElementFactory.bind(null, 'article'),
+    button: DOMElementFactory.bind(null, 'button'),
     div: DOMElementFactory.bind(null, 'div'),
     img: DOMElementFactory.bind(null, 'img'),
     h2: DOMElementFactory.bind(null, 'h2'),
@@ -38,34 +55,12 @@ export function changeActiveBtnStyle(nav, elem) {
     elem.classList.add('active');
 }
 
-function cardShrinker(index, currArticle, cardsArray) {
-    for (const card of cardsArray) {
-        if (card == cardsArray[index - pagesCount]) {
-            currArticle.replaceWith(createInitRecipeCards(card));
-        }
-    }
-}
-
-export function shrinkCard(evt) {
-    let childIndex = Array.from(evt.currentTarget.parentElement.children).indexOf(evt.currentTarget);
-    let currArticle = evt.currentTarget.parentElement.children[childIndex];
-
-    const shrink = cardShrinker.bind(null, childIndex, currArticle);
-    loadRecipes()
-        .then(shrink);
-}
-
 export function createInitRecipeCards(recipe) {
-    function toggleCard(recipe, parent) {
-        getRecipeById(recipe._id)
-            .then(recipeDetails => parent.replaceWith(createRecipeCard(recipeDetails)));
-    }
-
     const articleElem = create.article([
         create.div(create.h2(recipe.name), [['className', 'title']]),
         create.div(create.img(recipe.img), [['className', 'small']]),
     ], [['className', 'preview']]);
-    articleElem.addEventListener('click', toggleCard.bind(null, recipe, articleElem));
+    articleElem.addEventListener('click', renderDetails.bind(null, recipe));
 
     return articleElem;
 }
@@ -74,22 +69,26 @@ export function createRecipeCard(recipe) {
     const ulElem = create.ul('');
     recipe.ingredients.map(e => ulElem.appendChild(create.li(e)));
 
-    const ingredientsElem = create.div([
-        create.h3('Ingredients:'),
-        ulElem,
-    ], [['className', 'ingredients']]);
+    const container = document.createDocumentFragment();
+    recipe.steps.map(e => container.appendChild(create.p(e)));
 
-    const bandElem = create.div([
-        create.div(create.img(recipe.img), [['className', 'thumb']]),
-        ingredientsElem,
-    ], [['className', 'band']]);
+    const articleElem = create.article([
+        create.h2(`${recipe.name}`),
+        create.div([create.div(create.img(recipe.img), [['className', 'thumb']]),
+        create.div([create.h3('Ingredients:'), ulElem,], [['className', 'ingredients']]),], [['className', 'band']]),
+        create.div([create.h3('Preparation:'), container], [['className', 'description']])
+    ]);
 
-
-    const descriptionElem = create.div(create.h3('Preparation:'), [['className', 'description']]);
-    recipe.steps.map(e => descriptionElem.appendChild(create.p(e)));
-
-    const articleElem = create.article([create.h2(`${recipe.name}`), bandElem, descriptionElem]);
-    articleElem.addEventListener('click', shrinkCard);
+    const showEdit = showMoreFactory();
+    let token = getToken();
+    if (token) {
+        getOwner()
+            .then(user => {
+                if (user._id == recipe._ownerId) {
+                    articleElem.appendChild(showEdit);
+                }
+            });
+    }
 
     return articleElem;
 }

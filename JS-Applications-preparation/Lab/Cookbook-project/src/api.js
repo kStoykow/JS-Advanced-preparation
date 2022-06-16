@@ -1,51 +1,62 @@
 import * as req from "./services.js";
-import { renderMessage } from "./pages/msgPage.js";
 import { renderHome } from "./pages/home.js";
 import { updateAuth, getToken } from "./auth.js";
+import { renderDetails } from "./pages/details.js";
+import { renderMessage } from "./pages/msgPage.js";
 import { changeActiveBtnStyle } from './utilities.js';
 
 const baseUrl = 'http://localhost:3030';
+const ownerUrl = `${baseUrl}/users/me`;
 const loginUrl = `${baseUrl}/users/login`;
 const logoutUrl = `${baseUrl}/users/logout`;
 const recipesUrl = `${baseUrl}/data/recipes`;
+const guestRecipeUrl = `${baseUrl}/jsonstore/coockbook/recipes`;
 const registerUrl = `${baseUrl}/users/register`;
-const guestRecipesUrl = `${baseUrl}/jsonstore/cookbook/recipes`;
-const guestRecipeDetailsUrl = `${baseUrl}/jsonstore/cookbook/details`;
 
 const rootElem = document.querySelector('.root');
 const mainNav = document.querySelector('nav');
 const msgPage = rootElem.querySelector('.msg');
 
+export const articleHolders = {};
 
-export const loadRecipes = () => {
-    let token = getToken();
-    if (!token) {
-        return req.get(guestRecipesUrl)
-            .then(data => Object.values(data))
-            .catch(err => console.log(err));
-    }
-    return req.get(recipesUrl)
+export const getOwner = () => req.get(ownerUrl).catch(err => console.log(err));
+
+export const loadRecipes = () =>
+    req.get(recipesUrl)
         .then(data => Object.values(data))
+        .then(recipes => {
+            let token = getToken();
+            if (!token) {
+                req.get(guestRecipeUrl);
+
+            } else {
+                recipes.forEach(recipe => {
+                    getOwner()
+                        .then(owner => {
+                            if (articleHolders.hasOwnProperty(owner._id) == false) {
+                                articleHolders[owner._id] = [];
+                            }
+                            if (owner._id == recipe._ownerId) {
+                                articleHolders[owner._id].push(recipe._id);
+                            }
+                        })
+                        .catch(err => console.log(err));
+                });
+            }
+
+            return recipes;
+        })
         .catch(err => console.log(err));
-}
 
-export const getRecipeById = (id) => {
-    let token = getToken();
-    if (!token) {
-        return req.get(`${guestRecipeDetailsUrl}/${id}`)
-            .catch(err => console.log(err));
-    } else {
-        return req.get(`${recipesUrl}/${id}`)
-            .catch(err => console.log(err));
-    }
-
-}
+export const getRecipeById = (id) =>
+    req.get(`${recipesUrl}/${id}`)
+        .catch(err => console.log(err));
 
 export const login = (email, password) =>
     req.post(loginUrl, { email, password })
         .then(res => {
             if (res.code != 403) {
-                let user = { username: res.username, token: res.accessToken };
+                const user = { username: res.username, token: res.accessToken };
                 localStorage.setItem('user', JSON.stringify(user));
                 updateAuth();
                 renderHome();
@@ -56,7 +67,6 @@ export const login = (email, password) =>
             }
         })
         .catch(err => renderMessage(err.message, 'login'));
-
 
 export let logout = () =>
     req.get(logoutUrl)
@@ -74,10 +84,11 @@ export let logout = () =>
                     renderHome();
                 }, 1500);
             }
-        });
+        })
+        .catch(e => console.log(e));
 
-export const register = (email, password, repeat) => {
-    return req.post(registerUrl, { email, password, repeat })
+export const register = (email, password, repeat) =>
+    req.post(registerUrl, { email, password, repeat })
         .then(res => {
             if (res.code == 409) {
                 throw new Error('Email already exists!');
@@ -90,6 +101,8 @@ export const register = (email, password, repeat) => {
             renderMessage('Successfully registration.', 'login');
         })
         .catch(err => renderMessage(err.message, 'register'));
-}
 
-export const createNewRecipe = (data) => req.post(recipesUrl, data).then(renderHome());
+export const createNewRecipe = (data) =>
+    req.post(recipesUrl, data)
+        .then(renderDetails)
+        .catch(e => console.log(e));
