@@ -8,13 +8,13 @@ registerForm.addEventListener('submit', (e) => {
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget);
-    const registerData = {
+    const user = {
         email: formData.get('email'),
         password: formData.get('password'),
         rePass: formData.get('rePass')
     }
 
-    register(registerData.email, registerData.password, registerData.rePass);
+    register(user.email, user.password, user.rePass);
 });
 
 export function renderRegister() {

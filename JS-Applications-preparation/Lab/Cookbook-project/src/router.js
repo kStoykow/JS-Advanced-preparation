@@ -1,4 +1,3 @@
-// import { logout } from "./api.js";
 import { renderLogout } from "./pages/logout.js";
 import { renderHome } from "./pages/home.js";
 import { renderCreate } from "./pages/create.js";
