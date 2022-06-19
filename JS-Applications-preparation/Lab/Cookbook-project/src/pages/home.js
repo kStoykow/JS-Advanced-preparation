@@ -12,7 +12,5 @@ export function renderHome() {
         hideContent();
 
         clearOldRecipes();
-        loadRecipes()
-                .then(appendRecipes)
-                .catch(err => console.log(err));
+        loadRecipes().then(appendRecipes);
 }

@@ -18,7 +18,7 @@ export function req(method, url, data) {
         }
     }
 
-    const token = getToken();
+    let token = getToken();
     if (token) {
         options.headers['X-Authorization'] = token;
     }

@@ -107,8 +107,7 @@ export const createNewRecipe = (data) =>
         .then(renderDetails)
         .catch(e => console.log(e));
 
-export const updateRecipe = (data, id) => 
-req.put(recipesUrl + `/${id}`, data)
+export const updateRecipe = (data, id) => req.put(recipesUrl + `/${id}`, data)
     .then(renderHome())
     .catch(err => console.log(err))
 
