@@ -1,4 +1,4 @@
-export const isAuthenticated = () => {
+export const getUser = () => {
     const serializedUser = localStorage.getItem('user');
     let user;
 
@@ -12,5 +12,12 @@ export const isAuthenticated = () => {
 
 export const getToken = () => {
     const user = JSON.parse(localStorage.getItem('user'));
-    return user.token;
+    if (user) {
+        return user.accessToken;
+    }
+    return null;
+}
+
+export const saveUser = (user) => {
+    localStorage.setItem('user', JSON.stringify(user));
 }

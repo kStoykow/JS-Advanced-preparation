@@ -1,4 +1,6 @@
 import { html } from '../node_modules/lit-html/lit-html.js';
+import * as userCRUD from '../services/userCRUD.js';
+
 
 const loginTemplate = (submitHandler) => html`
 <article class="login-page">
@@ -11,15 +13,15 @@ const loginTemplate = (submitHandler) => html`
 </article>
 `;
 
-function submitHandler(e) {
+function submitHandler(ctx, e) {
     e.preventDefault();
 
     const data = Object.fromEntries(new FormData(e.currentTarget));
-    console.log(data);
+    userCRUD.login(data.email, data.password)
+        .then(() => ctx.page.redirect('/'));
 }
 
 export const loginView = (ctx) => {
-   
-        ctx.render(loginTemplate(submitHandler));
+    ctx.render(loginTemplate(submitHandler.bind(null, ctx)));
 }
 

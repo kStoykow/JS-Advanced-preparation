@@ -11,16 +11,14 @@ const renderer = (template) => {
     render(template, root);
 }
 
-
 export const contentMiddleware = (ctx, next) => {
+    ctx.user = userServices.getUser();
     ctx.render = renderer;
-    ctx.user = userServices.isAuthenticated();
 
     next();
 }
 
 export const navigationMiddleware = (ctx, next) => {
     render(navView(ctx.user), nav);
-
     next();
 }
