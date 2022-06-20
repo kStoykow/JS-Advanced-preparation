@@ -2,7 +2,7 @@ import { render } from '../node_modules/lit-html/lit-html.js';
 
 import { navView } from '../views/nav.js';
 
-import * as userServices from "../services/user.js";
+import * as userServices from "../services/userAuth.js";
 
 const nav = document.querySelector('.navigation');
 const root = document.querySelector('.root');

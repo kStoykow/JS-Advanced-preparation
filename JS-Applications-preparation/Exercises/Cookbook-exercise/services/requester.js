@@ -1,4 +1,4 @@
-import { getToken } from "./user.js";
+import { getToken } from "./userAuth.js";
 
 export function req(method, url, data) {
     let options = {

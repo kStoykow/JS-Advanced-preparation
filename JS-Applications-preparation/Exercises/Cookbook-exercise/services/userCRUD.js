@@ -1,10 +1,11 @@
 import * as request from './requester.js';
-import * as  userService from './user.js';
+import * as  userService from './userAuth.js';
 
 const baseUrl = 'http://localhost:3030';
 const loginUrl = `${baseUrl}/users/login`;
 const registerUrl = `${baseUrl}/users/register`;
 const logoutUrl = `${baseUrl}/users/logout`;
+const ownerUrl = `${baseUrl}/users/me`;
 
 export const login = (email, password) =>
     request.post(loginUrl, { email, password })
