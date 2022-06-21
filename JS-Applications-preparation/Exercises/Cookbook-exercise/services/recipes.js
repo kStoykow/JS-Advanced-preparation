@@ -6,4 +6,7 @@ const guestRecipeUrl = `${baseUrl}/jsonstore/cookbook/recipes`;
 
 export const loadRecipes = () => request.get(allRecipes)//.then(res => Object.values(res));
 
-export const getRecipeById = (id) => request.get(`${allRecipes}/${id}`)//.then(console.log);
+export const getRecipeById = (id) => request.get(`${allRecipes}/${id}`);
+
+export const createRecipe = (data) => request.post(allRecipes, data)
+

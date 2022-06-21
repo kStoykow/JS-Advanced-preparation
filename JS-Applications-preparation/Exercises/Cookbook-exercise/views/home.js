@@ -15,8 +15,7 @@ const homeTemplate = (recipes, ctx) => html`
     ${recipes.map(res => cardTemplate(res, ctx,toggleDetailsHandler))}
 `;
 
-const toggleDetailsHandler = (recipe, ctx, e) => {
-    // console.log(recipe);
+const toggleDetailsHandler = (recipe, ctx) => {
     ctx.page.redirect(`/details/${recipe._id}`);
 }
 

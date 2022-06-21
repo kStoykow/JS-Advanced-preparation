@@ -3,10 +3,11 @@ import * as recipeService from '../services/recipes.js'
 
 const ingredientsTemplate = (ingredients) => html`
     ${ingredients.map(e => html`<li>${e}</li>`)}
-`
+`;
+
 const preparationTemplate = (steps) => html`
     ${steps.map(e => html`<p>${e}</p>`)}
-`
+`;
 
 const cardDetailsTemplate = (recipe, userId) => html`
 <article>
@@ -25,7 +26,7 @@ const cardDetailsTemplate = (recipe, userId) => html`
             <h3>Preparation:</h3>
             ${preparationTemplate(recipe.steps)}
         </div>
-        ${userId == recipe._id
+        ${userId == recipe._ownerId
         ? html`<div class="controls">
             <button>✎ Edit</button>
             <button>✖ Delete</button>
@@ -38,5 +39,6 @@ const cardDetailsTemplate = (recipe, userId) => html`
 export const detailsView = async (ctx) => {
     const recipeId = ctx.params.id;
     const recipe = await recipeService.getRecipeById(recipeId);
-    ctx.render(cardDetailsTemplate(recipe, ctx.user_id));
+
+    ctx.render(cardDetailsTemplate(recipe, ctx.user._id));
 }
