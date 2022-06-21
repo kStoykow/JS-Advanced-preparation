@@ -1,8 +1,9 @@
 import { html } from '../node_modules/lit-html/lit-html.js';
 import * as recipeService from '../services/recipes.js'
+import { detailsView } from './details.js';
 
-const cardTemplate = (recipe) => html`
-<article class="preview">
+const cardTemplate = (recipe, ctx,toggleDetailsHandler) => html`
+<article class="preview" @click=${toggleDetailsHandler.bind(null, recipe, ctx)}>
     <div class="title">
         <h2>${recipe.name}</h2>
     </div>
@@ -10,38 +11,18 @@ const cardTemplate = (recipe) => html`
 </article>
 `;
 
-const cardDetailsTemplate = (recipe) => html`
-<article>
-    <h2>${recipe.name}</h2>
-    <div class="band">
-        <div class="thumb"><img src=${recipe.img}></div>
-        <div class="ingredients">
-            <h3>Ingredients:</h3>
-            <ul>
-                <!-- <li>1 tbsp Ingredient 1</li> 
-                <li>2 cups Ingredient 2</li>
-                <li>500 g Ingredient 3</li>
-                <li>25 g Ingredient 4</li> -->
-            </ul>
-        </div>
-    </div>
-    <div class="description">
-        <h3>Preparation:</h3>
-        <!-- <p>Prepare ingredients</p>
-        <p>Mix ingredients</p>
-        <p>Cook until done</p> -->
-    </div>
-</article>
+const homeTemplate = (recipes, ctx) => html`
+    ${recipes.map(res => cardTemplate(res, ctx,toggleDetailsHandler))}
 `;
 
-const homeTemplate = (recipes) => html`
-    ${recipes.map(cardTemplate)}
-`;
+const toggleDetailsHandler = (recipe, ctx, e) => {
+    // console.log(recipe);
+    ctx.page.redirect(`/details/${recipe._id}`);
+}
 
 export const homeView = (ctx) => {
     recipeService.loadRecipes()
         .then(recipes => {
-            console.log(recipes);
-            ctx.render(homeTemplate(recipes));
+            ctx.render(homeTemplate(recipes, ctx));
         });
 }
