@@ -8,5 +8,6 @@ export const loadRecipes = () => request.get(allRecipes)//.then(res => Object.va
 
 export const getRecipeById = (id) => request.get(`${allRecipes}/${id}`);
 
-export const createRecipe = (data) => request.post(allRecipes, data)
+export const createRecipe = (data) => request.post(allRecipes, data);
 
+export const editRecipe = (id, data) => request.put(`${allRecipes}/${id}`, data);

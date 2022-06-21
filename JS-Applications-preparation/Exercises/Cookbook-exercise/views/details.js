@@ -9,7 +9,7 @@ const preparationTemplate = (steps) => html`
     ${steps.map(e => html`<p>${e}</p>`)}
 `;
 
-const cardDetailsTemplate = (recipe, userId) => html`
+const cardDetailsTemplate = (recipe, ctx) => html`
 <article>
     <article>
         <h2>${recipe.name}</h2>
@@ -26,19 +26,27 @@ const cardDetailsTemplate = (recipe, userId) => html`
             <h3>Preparation:</h3>
             ${preparationTemplate(recipe.steps)}
         </div>
-        ${userId == recipe._ownerId
+        ${ctx.user?._id == recipe._ownerId
         ? html`<div class="controls">
-            <button>✎ Edit</button>
-            <button>✖ Delete</button>
+            <button @click=${editHandler.bind(null, ctx)}>✎ Edit</button>
+            <button @click=${deleteHandler.bind(null, ctx)}>✖ Delete</button>
         </div>`
         : nothing}
 
     </article>
     `;
 
+const editHandler = (ctx) => {
+    ctx.page.redirect(`/edit/${ctx.params.id}`);
+}
+
+const deleteHandler = (ctx,e) => {
+
+}
+
 export const detailsView = async (ctx) => {
     const recipeId = ctx.params.id;
     const recipe = await recipeService.getRecipeById(recipeId);
 
-    ctx.render(cardDetailsTemplate(recipe, ctx.user._id));
+    ctx.render(cardDetailsTemplate(recipe, ctx));
 }
