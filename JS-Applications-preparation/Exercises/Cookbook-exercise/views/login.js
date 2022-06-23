@@ -21,7 +21,5 @@ function submitHandler(ctx, e) {
         .then(() => ctx.page.redirect('/'));
 }
 
-export const loginView = (ctx) => {
-    ctx.render(loginTemplate(submitHandler.bind(null, ctx)));
-}
+export const loginView = (ctx) => ctx.render(loginTemplate(submitHandler.bind(null, ctx)));
 

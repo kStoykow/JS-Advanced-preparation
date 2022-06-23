@@ -29,6 +29,4 @@ const submitHandler = (ctx, e) => {
         });
 }
 
-export const createView = (ctx) => {
-    ctx.render(createTemplate(submitHandler.bind(null, ctx)));
-}
+export const createView = (ctx) => ctx.render(createTemplate(submitHandler.bind(null, ctx)));

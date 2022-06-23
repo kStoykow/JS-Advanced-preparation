@@ -29,6 +29,4 @@ function registerHandler(ctx, e) {
         .then(() => ctx.page.redirect('/'));
 }
 
-export const registerView = (ctx) => {
-    ctx.render(registerTemplate(registerHandler.bind(null, ctx)));
-}
+export const registerView = (ctx) => ctx.render(registerTemplate(registerHandler.bind(null, ctx)));

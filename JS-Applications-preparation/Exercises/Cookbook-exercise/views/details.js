@@ -36,17 +36,20 @@ const cardDetailsTemplate = (recipe, ctx) => html`
     </article>
     `;
 
-const editHandler = (ctx) => {
-    ctx.page.redirect(`/edit/${ctx.params.id}`);
-}
+const deletedRecipeTemplate = html`
+<article>
+    <h2>Recipe deleted</h2>
+</article>
+`;
 
-const deleteHandler = (ctx,e) => {
+const editHandler = (ctx) => ctx.page.redirect(`/edit/${ctx.params.id}`);
 
-}
+const deleteHandler = (ctx) => recipeService.deleteRecipe(ctx.params.id)
+    .then(() => ctx.render(deletedRecipeTemplate));
 
-export const detailsView = async (ctx) => {
+export const detailsView = (ctx) => {
     const recipeId = ctx.params.id;
-    const recipe = await recipeService.getRecipeById(recipeId);
 
-    ctx.render(cardDetailsTemplate(recipe, ctx));
+    recipeService.getRecipeById(recipeId)
+        .then(recipe => ctx.render(cardDetailsTemplate(recipe, ctx)));
 }

@@ -1,8 +1,7 @@
 import { html } from '../node_modules/lit-html/lit-html.js';
 import * as recipeService from '../services/recipes.js'
-import { detailsView } from './details.js';
 
-const cardTemplate = (recipe, ctx,toggleDetailsHandler) => html`
+const cardTemplate = (recipe, ctx, toggleDetailsHandler) => html`
 <article class="preview" @click=${toggleDetailsHandler.bind(null, recipe, ctx)}>
     <div class="title">
         <h2>${recipe.name}</h2>
@@ -12,16 +11,15 @@ const cardTemplate = (recipe, ctx,toggleDetailsHandler) => html`
 `;
 
 const homeTemplate = (recipes, ctx) => html`
-    ${recipes.map(res => cardTemplate(res, ctx,toggleDetailsHandler))}
+    ${recipes.map(res => cardTemplate(res, ctx, toggleDetailsHandler))}
 `;
 
 const toggleDetailsHandler = (recipe, ctx) => {
     ctx.page.redirect(`/details/${recipe._id}`);
 }
 
-export const homeView = (ctx) => {
+export const homeView = (ctx) =>
     recipeService.loadRecipes()
         .then(recipes => {
             ctx.render(homeTemplate(recipes, ctx));
         });
-}

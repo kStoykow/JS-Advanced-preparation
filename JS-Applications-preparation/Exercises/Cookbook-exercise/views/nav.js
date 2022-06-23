@@ -16,11 +16,9 @@ const navTemplate = (user) => html`
     <a href="/" class="active">Catalog</a>
 
     ${user
-    ? userTemplate
-    : guestTemplate}
+        ? userTemplate
+        : guestTemplate}
 </nav>
 `;
 
-export const navView = (user) => {
-    return navTemplate(user);
-}
+export const navView = (user) => navTemplate(user);

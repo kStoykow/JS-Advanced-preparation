@@ -5,7 +5,7 @@ const baseUrl = 'http://localhost:3030';
 const loginUrl = `${baseUrl}/users/login`;
 const registerUrl = `${baseUrl}/users/register`;
 const logoutUrl = `${baseUrl}/users/logout`;
-const ownerUrl = `${baseUrl}/users/me`;
+// const ownerUrl = `${baseUrl}/users/me`;
 
 export const login = (email, password) =>
     request.post(loginUrl, { email, password })
@@ -19,7 +19,6 @@ export const login = (email, password) =>
             }
         });
 
-
 export const register = (email, password, repeat) =>
     request.post(registerUrl, { email, password, repeat })
         .then(res => {
@@ -29,7 +28,6 @@ export const register = (email, password, repeat) =>
             userService.saveUser(res);
         })
         .catch(err => alert(err.message));
-
 
 export const logout = () =>
     request.get(logoutUrl)

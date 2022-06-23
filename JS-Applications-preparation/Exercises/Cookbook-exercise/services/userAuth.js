@@ -1,12 +1,9 @@
 export const getUser = () => {
     const serializedUser = localStorage.getItem('user');
-    let user;
 
     if (serializedUser) {
-        user = JSON.parse(serializedUser);
-        return user;
+        return JSON.parse(serializedUser);
     }
-
     return null;
 }
 
@@ -18,6 +15,4 @@ export const getToken = () => {
     return null;
 }
 
-export const saveUser = (user) => {
-    localStorage.setItem('user', JSON.stringify(user));
-}
+export const saveUser = (user) => localStorage.setItem('user', JSON.stringify(user));
