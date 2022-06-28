@@ -9,12 +9,14 @@ import { homeView } from '../views/home.js';
 import { logoutView } from '../views/logout.js';
 import { detailsView } from '../views/details.js';
 import { editView } from '../views/edit.js';
+import { catalogView } from '../views/catalog.js';
 
 page(contentMiddleware);
 page(navigationMiddleware);
 
 page('/', homeView);
 page('/login', loginView);
+page('/catalog', catalogView);
 page('/edit/:id', editView);
 page('/create', createView);
 page('/register', registerView);

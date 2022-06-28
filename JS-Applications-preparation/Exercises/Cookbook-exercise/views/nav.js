@@ -11,9 +11,9 @@ const guestTemplate = html`
 `;
 
 const navTemplate = (user) => html`
-<h1>My Cookbook</h1>
+<h1><a href="/"><img src="assets/logo.png">My Cookbook</a></h1>
 <nav>
-    <a href="/" class="active">Catalog</a>
+    <a href="/catalog" class="active">Catalog</a>
 
     ${user
         ? userTemplate
