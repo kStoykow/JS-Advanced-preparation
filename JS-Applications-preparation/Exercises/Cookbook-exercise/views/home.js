@@ -29,12 +29,9 @@ const homeTemplate = (recipes, ctx) => html`
 </div>
 `;
 
-const toggleDetailsHandler = (recipe, ctx) => {
-    ctx.page.redirect(`/details/${recipe._id}`);
-}
+const toggleDetailsHandler = (recipe, ctx) => ctx.page.redirect(`/details/${recipe._id}`);
 
-export const homeView = (ctx) =>
-    recipeService.recentRecipes()
-        .then(recipes => {
-            ctx.render(homeTemplate(recipes, ctx));
-        });
+export const homeView = (ctx) => recipeService.recentRecipes()
+    .then(recipes => {
+        ctx.render(homeTemplate(recipes, ctx));
+    });

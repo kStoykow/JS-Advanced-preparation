@@ -11,15 +11,18 @@ import { detailsView } from '../views/details.js';
 import { editView } from '../views/edit.js';
 import { catalogView } from '../views/catalog.js';
 
+localStorage.clear();
+
 page(contentMiddleware);
 page(navigationMiddleware);
 
 page('/', homeView);
 page('/login', loginView);
+page('/details/:id', detailsView);
+page('/catalog/:page', catalogView);
 page('/catalog', catalogView);
 page('/edit/:id', editView);
 page('/create', createView);
 page('/register', registerView);
-page('/details/:id', detailsView);
 page('/logout', logoutView);
 page.start();
