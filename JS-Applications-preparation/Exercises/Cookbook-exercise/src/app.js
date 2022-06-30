@@ -11,8 +11,6 @@ import { detailsView } from '../views/details.js';
 import { editView } from '../views/edit.js';
 import { catalogView } from '../views/catalog.js';
 
-localStorage.clear();
-
 page(contentMiddleware);
 page(navigationMiddleware);
 
