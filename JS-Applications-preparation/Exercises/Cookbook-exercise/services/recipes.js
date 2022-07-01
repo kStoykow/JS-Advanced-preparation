@@ -8,8 +8,7 @@ const endpoints = {
     allRecipes: `${baseUrl}/data/recipes`,
     pagination: (page) => `${baseUrl}/data/recipes?select=_id%2Cname%2Cimg&offset=${(page - 1) * PAGE_SIZE}&pageSize=${PAGE_SIZE}`,
     recentRecipes: `${baseUrl}/data/recipes?select=_id%2Cname%2Cimg&sortBy=_createdOn%20desc&pageSize=3`,
-    allComments: (recipeId) => `${baseUrl}/data/comments?where=recipeId%3D%22${recipeId}%22`,
-    createComment: `${baseUrl}/data/comments`,
+
 }
 
 export const totalPages = Math.ceil(await request.get(endpoints.recipesCount) / PAGE_SIZE);
@@ -32,7 +31,3 @@ export const deleteRecipe = (recipe) => {
     }
 
 }
-
-export const getAllComments = (recipeId) => request.get(endpoints.allComments(recipeId));
-
-export const createComment = (data) => request.post(endpoints.createComment, data);

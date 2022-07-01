@@ -1,5 +1,8 @@
 import { html, nothing } from '../node_modules/lit-html/lit-html.js';
+import { getAllComments } from '../services/comments.js';
 import * as recipeService from '../services/recipes.js'
+import { commentsSetup } from './comments.js';
+import { formView } from './commentsForm.js';
 
 const ingredientsTemplate = (ingredients) => html`
     ${ingredients.map(e => html`<li>${e}</li>`)}
@@ -9,7 +12,7 @@ const preparationTemplate = (steps) => html`
     ${steps.map(e => html`<p>${e}</p>`)}
 `;
 
-const cardDetailsTemplate = (recipe, ctx) => html`
+const cardDetailsTemplate = (recipe, ctx, commentsSetup) => html`
     <article>
         <article>
             <h2>${recipe.name}</h2>
@@ -35,7 +38,7 @@ const cardDetailsTemplate = (recipe, ctx) => html`
         </article>
     </article>
     
-    <div class="section-title"> Comments for ${recipe.name}</div>
+    ${commentsSetup}
 `;
 
 const deletedRecipeTemplate = html`
@@ -49,9 +52,16 @@ const editHandler = (ctx) => ctx.page.redirect(`/ edit / ${ctx.params.id} `);
 const deleteHandler = (ctx) => recipeService.deleteRecipe(ctx.params.id)
     .then(() => ctx.render(deletedRecipeTemplate));
 
-export const detailsView = (ctx) => {
-    const recipeId = ctx.params.id;
+    const toggleForm = (e) => {
+        e.preventDefault();
+        console.log('asd');
+        // let data = Object.fromEntries(new FormData(e.currentTarget));
+        // console.log(data);
+    }
 
+export const detailsView = async (ctx) => {
+    const recipeId = ctx.params.id;
+    const comments = await getAllComments();
     recipeService.getRecipeById(recipeId)
-        .then(recipe => ctx.render(cardDetailsTemplate(recipe, ctx)));
+        .then(recipe => ctx.render(cardDetailsTemplate(recipe, ctx, commentsSetup(recipe,formView.bind(null,true,toggleForm) ,comments))));
 }
