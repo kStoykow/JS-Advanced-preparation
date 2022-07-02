@@ -23,11 +23,4 @@ export const createRecipe = (data) => request.post(endpoints.allRecipes, data);
 
 export const editRecipe = (recipeId, data) => request.put(`${endpoints.allRecipes}/${recipeId}`, data);
 
-export const deleteRecipe = (recipe) => {
-    console.log(recipe);
-    const confirmed = confirm(`Are you sure you want to delete ${recipe.name}?`);
-    if (confirmed) {
-        request.del(`${endpoints.allRecipes}/${recipe._id}`)
-    }
-
-}
+export const deleteRecipe = (recipe) => request.del(`${endpoints.allRecipes}/${recipe._id}`);
