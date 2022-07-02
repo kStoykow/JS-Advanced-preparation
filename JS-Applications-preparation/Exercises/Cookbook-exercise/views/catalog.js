@@ -1,6 +1,8 @@
 import { html, nothing } from '../node_modules/lit-html/lit-html.js';
+
 import * as recipeService from '../services/recipes.js';
 
+import { searchView } from './search.js';
 
 const cardTemplate = (recipe, ctx, toggleDetailsHandler) => html`
 <article class="preview" @click=${toggleDetailsHandler.bind(null, recipe, ctx)}>
@@ -11,8 +13,10 @@ const cardTemplate = (recipe, ctx, toggleDetailsHandler) => html`
 </article>
 `;
 
-const catalogTemplate = (recipes, ctx, page, totalPages) => html`
+export const catalogTemplate = (recipes, ctx, page, totalPages) => html`
+ ${searchView(ctx)}
 <div class="section-title">
+
     ${ page > 1 
     ? html`<a class="pager" href="/catalog?page=${page - 1}"> &lt; Prev</a>`
     : nothing }

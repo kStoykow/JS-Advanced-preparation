@@ -14,31 +14,31 @@ const preparationTemplate = (steps) => html`
 `;
 
 const cardDetailsTemplate = (recipe, allComments, ctx) => html`
-    <article>
         <article>
-            <h2>${recipe.name}</h2>
-            <div class="band">
-                <div class="thumb"><img src="../${recipe.img}"></div>
-                <div class="ingredients">
-                    <h3>Ingredients:</h3>
-                    <ul>
-                        ${ingredientsTemplate(recipe.ingredients)}
-                    </ul>
+            <article>
+                <h2>${recipe.name}</h2>
+                <div class="band">
+                    <div class="thumb"><img src="../${recipe.img}"></div>
+                    <div class="ingredients">
+                        <h3>Ingredients:</h3>
+                        <ul>
+                            ${ingredientsTemplate(recipe.ingredients)}
+                        </ul>
+                    </div>
                 </div>
-            </div>
-            <div class="description">
-                <h3>Preparation:</h3>
-                ${preparationTemplate(recipe.steps)}
-            </div>
-            ${ctx.user?._id == recipe._ownerId
-            ? html`<div class="controls">
-                <button @click=${editHandler.bind(null, ctx)}>✎ Edit</button>
-                <button @click=${deleteHandler.bind(null, ctx, recipe)}>✖ Delete</button>
-            </div>`
-            : nothing}
+                <div class="description">
+                    <h3>Preparation:</h3>
+                    ${preparationTemplate(recipe.steps)}
+                </div>
+                ${ctx.user?._id == recipe._ownerId
+        ? html`<div class="controls">
+                    <button @click=${editHandler.bind(null, ctx)}>✎ Edit</button>
+                    <button @click=${deleteHandler.bind(null, ctx, recipe)}>✖ Delete</button>
+                </div>`
+        : nothing}
+            </article>
         </article>
-    </article>
-    ${commentsView(recipe, allComments, ctx)}
+        ${commentsView(recipe, allComments, ctx)}
 `;
 
 const deletedRecipeTemplate = html`
