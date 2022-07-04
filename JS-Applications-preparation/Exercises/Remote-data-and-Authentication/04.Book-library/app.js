@@ -10,11 +10,30 @@ const authorElem = document.getElementById('author');
 const loadBtn = document.getElementById('loadBooks');
 const submitBtn = document.getElementById('submit');
 const formHeader = document.querySelector('form h3');
+const saveBtn = document.createElement('button');
+saveBtn.textContent = 'Save';
 
 function getIdByTitle(title) {
     return fetch(url)
         .then(res => res.json())
         .then(res => Object.entries(res).find(e => e[1].title == title));
+}
+
+function onEdit(id, e) {
+    e.preventDefault();
+
+    const data = { author: authorElem.value, title: titleElem.value };
+
+    fetch(endpoints.update(id), {
+        method: 'PUT',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(data)
+    }).then(() => {
+        document.querySelector('form').replaceChild(submitBtn, document.querySelector('form button'));
+        titleElem.value = '';
+        authorElem.value = '';
+    }).then(() => getBooks())
+
 }
 
 const getBooks = () => fetch(url)
@@ -38,23 +57,8 @@ const addBook = (e) => {
             });
     }
 }
-function onEdit(id, e) {
-    e.preventDefault();
 
-    const data = { author: authorElem.value, title: titleElem.value };
-
-    fetch(endpoints.update(id), {
-        method: 'PUT',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify(data)
-    }).then(() => {
-        document.querySelector('form').replaceChild(submitBtn, document.querySelector('form button'));
-        titleElem.value = '';
-        authorElem.value = '';
-    }).then(() => getBooks())
-
-}
-const editBook = async (e) => {
+const editBook = (e) => {
     const tr = e.target.parentElement.parentElement;
     const [title, author] = Array.from(tr.children);
     formHeader.textContent = 'Edit FORM';
@@ -62,18 +66,26 @@ const editBook = async (e) => {
     titleElem.value = title.textContent;
     authorElem.value = author.textContent;
 
-    const [id] = await getIdByTitle(title.textContent);
+    getIdByTitle(title.textContent)
+        .then(([id]) => {
+            saveBtn.addEventListener('click', onEdit.bind(null, id));
 
-    const saveBtn = document.createElement('button');
-    saveBtn.textContent = 'Save';
-    saveBtn.addEventListener('click', onEdit.bind(null, id));
+            document.querySelector('form').replaceChild(saveBtn, submitBtn);
+        });
 
-    document.querySelector('form').replaceChild(saveBtn, submitBtn);
+
 }
 
 const deleteBook = (e) => {
-
-} //TOFINISH delete 
+    const tr = e.target.parentElement.parentElement;
+    const title = Array.from(tr.children)[0];
+    getIdByTitle(title.textContent)
+        .then(([id]) => fetch(endpoints.delete(id), {
+            method: 'DELETE',
+            headers: { 'content-type': 'application/json' }
+        }))
+        .then(getBooks);
+}
 
 const updateList = (books) => {
     tbody.innerHTML = '';

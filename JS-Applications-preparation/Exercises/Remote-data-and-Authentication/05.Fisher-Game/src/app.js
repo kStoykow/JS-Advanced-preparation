@@ -1,1 +1,5 @@
-console.log('TODO:// Implement Home functionality');
+if(user){
+    //show user nav
+}
+
+//TOFINISH
