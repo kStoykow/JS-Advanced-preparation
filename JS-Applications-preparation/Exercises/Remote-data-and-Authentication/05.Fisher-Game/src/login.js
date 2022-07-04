@@ -17,7 +17,7 @@ const login = (e) => {
                 localStorage.setItem('user', JSON.stringify(res));
                 location.href = home.href;
             } else {
-                throw new Error(`${res.message}`)
+                throw new Error(`${res.message}`);
             }
         })
         .catch(err => alert(err.message));
