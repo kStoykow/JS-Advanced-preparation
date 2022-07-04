@@ -8,6 +8,7 @@ const buttons = {
     update: Array.from(document.querySelectorAll('button.update')),
     delete: Array.from(document.querySelectorAll('button.delete')),
     add: document.querySelector('button.add'),
+    logout: document.getElementById('logout'),
 }
 const welcomeElem = document.querySelector('.email span');
 
@@ -25,4 +26,4 @@ if (user) {
     buttons.add.disabled = true;
 }
 
-//TOFINISH
+logout.addEventListener('click', userService.logout);
