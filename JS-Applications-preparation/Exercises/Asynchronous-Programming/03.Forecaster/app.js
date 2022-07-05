@@ -58,7 +58,7 @@ function attachEvents() {
         const parentElem = div('', ['className', 'forecasts']);
         const spanSymbol = span(`${weatherMap[city.forecast.condition]} `, ['className', 'condition symbol']);
         const spanParent = span('', ['className', 'condition']);
-        const spanName = span(`${city.name} `, ['className', 'forecast-data']);
+        const spanName = span(`${city.name}`, ['className', 'forecast-data']);
         const spanTemperature = span(`${city.forecast.low}${weatherMap.Degrees}/${city.forecast.high}${weatherMap.Degrees}`, ['className', 'forecast-data']);
         const spanCondition = span(`${city.forecast.condition}`, ['className', 'forecast-data']);
         spanParent.appendChild(spanName);

@@ -24,10 +24,10 @@ function attachEvents() {
     const createLi = DOMElementFactory.bind(null, 'li');
 
     const select = document.getElementById('posts');
+    const postTitle = document.getElementById('post-title');
     const postInfoElem = document.getElementById('post-body');
     const postCommentsElem = document.getElementById('post-comments');
 
-    const linkedList = {};
 
     function getPosts() {
         return fetch('http://localhost:3030/jsonstore/blog/posts')
@@ -52,32 +52,23 @@ function attachEvents() {
     function createOptions(data) {
         document.getElementById('posts').innerHTML = '';
         data.forEach((post) => {
-            linkedList[post.id] = { body: post.body, comments: [] };
             select.appendChild(createOption(`${post.title}`, [['value', `${post.id}`]]));
         });
     }
 
-    function renderCommnets() {
+    async function renderCommnets() {
+        const { body, id, title } = await getPosts()
+            .then(res => res.filter(e => e.id == select.value)[0])
+
         getComments()
-            .then(createComments)
+            .then(res => res.filter(e => e.postId == select.value))
+            .then(comments => {
+                postCommentsElem.innerHTML = '';
+                postTitle.textContent = title;
+                postInfoElem.textContent = body;
+                comments.forEach(comment => postCommentsElem.appendChild(createLi(`${comment.text}`, [['id', `${comment.id}`]])))
+            })
             .catch(e => console.log(e));
-    }
-
-    function createComments(data) {
-        data.forEach(comment => {
-            if (linkedList[comment.postId].comments.some(e => e.commentId == comment.id) == false) {
-                linkedList[comment.postId].comments.push({ id: comment.id, text: comment.text });
-            }
-        });
-
-        postInfoElem.textContent = '';
-        postCommentsElem.innerHTML = '';
-        const currentPost = select.value;
-
-        postInfoElem.textContent = linkedList[currentPost].body;
-        linkedList[currentPost].comments.forEach(comment => {
-            postCommentsElem.appendChild(createLi(`${comment.text}`, [['id', `${comment.id}`]]));
-        });
     }
 
     const getPostsBtn = document.getElementById('btnLoadPosts');

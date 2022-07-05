@@ -1,6 +1,7 @@
 function lockedProfile() {
     fetch('http://localhost:3030/jsonstore/advanced/profiles')
         .then(res => res.json())
+        .then(res => Object.values(res))
         .then(createCards)
         .catch(e => console.log(e));
 }
@@ -55,7 +56,7 @@ function createHiddenProfileInfo(person, i) {
         createLabel('Email:'),
         createInput('', [['type', 'email'], ['name', `user${i + 1}Email`], ['value', `${person.email}`], ['disabled', 'true'], ['readonly', 'true']]),
         createLabel('Age:'),
-        createInput('', [['type', 'tex'], ['name', `user${i + 1}Age`], ['value', `${person.age}`], ['disabled', 'true'], ['readonly', 'true']]),
+        createInput('', [['type', 'email'], ['name', `user${i + 1}Age`], ['value', `${person.age}`], ['disabled', 'true'], ['readonly', 'true']]),
     ], [['id', `user${i + 1}HiddenFields`], ['className', 'hiddenInfo']]);
 }
 
@@ -68,7 +69,7 @@ function createContainerElem(person, i, btn) {
 function toggleInfo(e) {
     const allProfiles = Array.from(document.querySelectorAll('.profile'));
     const currProfileIndex = allProfiles.indexOf(e.target.parentElement);
-    const hiddenElem = e.target.parentElement.querySelector(`#user${currProfileIndex}HiddenFields`);
+    const hiddenElem = e.target.parentElement.querySelector(`#user${currProfileIndex + 1}HiddenFields`);
     const radios = e.target.parentElement.querySelectorAll('input[type="radio"]');
 
     if ([...radios].filter(e => e.checked)[0].value == 'unlock') {
@@ -77,8 +78,8 @@ function toggleInfo(e) {
     }
 }
 
-function createCards(responseObj) {
-    const data = Object.values(responseObj);
+function createCards(data) {
+    document.querySelector('main').removeChild(document.querySelector('main').firstElementChild);
     data.map((person, i) => {
         const btn = createButton('Show More');
         btn.addEventListener('click', toggleInfo);
